@@ -42,7 +42,18 @@ def bookInfo(response):
         book_id = response.GET.get('id')
         book_info = book.objects.filter(id__exact=book_id)
         print(book_info)
-        return render(response, "summary_page.html", {"books":list(book_info)})
+        return book_info
+
+
+def summaryPage(response):
+    book_info = bookInfo(response)
+    return render(response, "summary_page.html", {"books":list(book_info)})
+
+
+def readStoryPage(response):
+    book_info = bookInfo(response)
+    return render(response, "read_full_story_page.html",{"books":list(book_info)})
+
 
 def searchForBook(request):
     """
