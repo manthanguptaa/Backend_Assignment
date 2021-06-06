@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from user_authentication import views as v
+from app import views as l
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("register/", v.register, name="register"),
-    path("", include("django.contrib.auth.urls"))
+    path("", include("django.contrib.auth.urls")),
+    path("", l.getAllBooks, name="home")
 ]
