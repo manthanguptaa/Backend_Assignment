@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("register/", v.register, name="register"),
     path("", include("django.contrib.auth.urls")),
-    path("", l.getAllBooks, name="home")
+    path("", l.getAllBooks, name="home"),
+    path("summary/",l.bookInfo, name="summary_page")
 ]

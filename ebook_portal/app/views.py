@@ -34,20 +34,15 @@ def postBook(request):
         return JsonResponse({"result":"success"})
 
 
-def bookInfo(request):
+def bookInfo(response):
     """
         A function to get all the info related to a book by it's book_id
     """
-    if request.method == 'GET':
-        book_id = request.GET.get('id')
-        try:
-            book_info = book.objects.filter(book_id__exact=book_id)
-            print(book_info)
-            return JsonResponse({"result":book_info})
-        except Exception as e:
-            print(e)
-            pass
-
+    if response.method == 'GET':
+        book_id = response.GET.get('id')
+        book_info = book.objects.filter(id__exact=book_id)
+        print(book_info)
+        return render(response, "summary_page.html", {"books":list(book_info)})
 
 def searchForBook(request):
     """
