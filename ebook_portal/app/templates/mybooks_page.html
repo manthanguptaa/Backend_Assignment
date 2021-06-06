@@ -7,24 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
   </head>
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">      
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="mybooks/?id={{current_user_id}}">
-                My Books
-                </a>
-            </div>
-        </div>
-    </nav>
-    <form method="POST" action="search/">
-        <div class="field is-grouped">
-            <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Find a repository">
-            </p>
-            <p class="control">
-            <button class="button is-primary" type="submit">Search</button>
-            </p>
-        </div>
     </form>
             </div>
                 {% for book in books %}
@@ -45,6 +27,11 @@
                     </div>
                 {% endfor %}
             </div>
+            <div class="control">
+                <a class="button is-info">
+                  Add A Book
+                </a>
+              </div>
                 
   </body>
 </html>

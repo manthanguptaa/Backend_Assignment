@@ -17,7 +17,8 @@ def getAllBooks(response):
         # book_dict = dict(books)
         # print(book_dict)
         # TODO paginate the results
-        return render(response, "landing_page.html", {"books":list(books), "user": User})
+        print(response.user.id)
+        return render(response, "landing_page.html", {"books":list(books), "user": User, "current_user_id": response.user.id})
 
 
 def postBook(request):
@@ -55,16 +56,23 @@ def readStoryPage(response):
     return render(response, "read_full_story_page.html",{"books":list(book_info)})
 
 
-def searchForBook(request):
+def searchForBook(response):
     """
         A function to get all the books that match the search query
     """
-    if request.method == 'GET':
-        search_query = request.GET.get('query')
-        try:
-            books = book.objects.filter(author__name__icontains=search_query,book_name__icontains=search_query)
-            print(books)
-            return JsonResponse({"result":books})
-        except Exception as e:
-            print(e)
-            pass
+    if response.method == 'POST':
+        search_query = response.form.get('query')
+        books = book.objects.filter(author__name__icontains=search_query,book_name__icontains=search_query)
+        print(books)
+        return render(response,"search_result_page.html",{"books": list(books)})
+
+
+def myBooks(response):
+    """
+        A function to get all the books by the current user and display it
+    """
+    if response.method == 'GET':
+        user_id = response.GET.get('id')
+        book_info = book.objects.filter(author__id__iexact = user_id)
+        print(book_info)
+        return render(response, "mybooks_page.html", {"books": list(book_info)})

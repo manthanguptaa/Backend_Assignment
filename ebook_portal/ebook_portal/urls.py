@@ -25,5 +25,7 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("", l.getAllBooks, name="home"),
     path("summary/",l.summaryPage, name="summary_page"),
-    path("summary/content/", l.readStoryPage, name="full_content_page")
+    path("summary/content/", l.readStoryPage, name="full_content_page"),
+    path("search/", l.searchForBook, name="search_result"),
+    path("mybooks/", l.myBooks, name = "my_books")
 ]
