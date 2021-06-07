@@ -1,1 +1,1 @@
-web: gunicorn ebook_portal.wsgi --log-file -
+web: gunicorn ebook_portal.wsgi:application --preload -b 0.0.0.0:$PORT
