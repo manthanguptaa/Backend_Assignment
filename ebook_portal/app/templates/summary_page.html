@@ -7,24 +7,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
   </head>
   <body>
-  <section class="section">
-    <div class="container">
-        {% for book in books %}
-            <h1 class="title">
-                {{book.book_name}}
-            </h1>
-            <p class="subtitle">
-                Author: {{book.author.username}}
-            </p>
-            <p>
-                {{book.summary}}
-            </p>
-            <p>
-                View the whole story
-                <a href="content/?id={{book.id}}">here</a>
-            </p>
-        {% endfor %}
-    </div>
-  </section>
+    {% for book in books %}
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">
+          {{book.book_name}}
+        </p>
+        <p class="subtitle">
+          Author: {{book.author.username}}
+        </p>
+      </div>
+    </section>
+    {% endfor %}
+    {% for book in books %}
+      <section class="section is-medium">
+        <div class="container">
+                <p class="subtitle">
+                    {{book.summary}}
+                </p>
+                <p>
+                    View the whole story
+                    <a href="content/?id={{book.id}}">here</a>
+                </p>
+        </div>
+      </section>
+    {% endfor %}
   </body>
 </html>

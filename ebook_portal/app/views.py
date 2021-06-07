@@ -14,12 +14,12 @@ def getAllBooks(request):
         A function to get all the books from DB and display it on the landing page as a catalogue
     """
     if request.method == 'GET':
-        books = book.objects.all().order_by("-publish_date")
-        paginator = Paginator(books,25) # Show 25 contacts per page.
-
+        books_result = book.objects.all().order_by("-publish_date")
+        # Paginate the results into batches of 25
+        paginator = Paginator(books_result,25)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        print(request.user.id)
+        
         return render(request, "landing_page.html", {"user": User, "current_user_id": request.user.id, 'page_obj': page_obj})
 
 
@@ -50,16 +50,22 @@ def bookInfo(request):
     if request.method == 'GET':
         book_id = request.GET.get('id')
         book_info = book.objects.filter(id__exact=book_id)
-        print(book_info)
+        
         return book_info
 
 
 def summaryPage(request):
+    """
+        Function for rendering summary page
+    """
     book_info = bookInfo(request)
     return render(request, "summary_page.html", {"books":list(book_info)})
 
 
 def readStoryPage(request):
+    """
+        Function for rendering the read full story page
+    """
     book_info = bookInfo(request)
     return render(request, "read_full_story_page.html",{"books":list(book_info)})
 
@@ -72,9 +78,10 @@ def searchForBook(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query')
         print(search_query)
-        books = book.objects.filter(author__username__icontains=search_query)
-        print(books)
-        helper(request,books)
+        books_byAuthor = book.objects.filter(author__username__icontains=search_query)
+        books_byName = book.objects.filter(book_name__iexact=search_query)
+        print(books_byName,books_byAuthor)
+        # helper(request,books)
 
 def helper(request, books):
     if request.method == 'GET':
@@ -88,5 +95,5 @@ def myBooks(request):
     if request.method == 'GET':
         user_id = request.GET.get('id')
         book_info = book.objects.filter(author__id__iexact = user_id)
-        print(book_info)
+        
         return render(request, "mybooks_page.html", {"books": list(book_info)})
