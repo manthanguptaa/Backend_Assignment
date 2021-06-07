@@ -1,1 +1,1 @@
-web: gunicorn ebook_portal.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn ebook_portal.wsgi --log-file -
