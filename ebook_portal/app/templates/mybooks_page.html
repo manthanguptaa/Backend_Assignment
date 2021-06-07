@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if user.is_authenticated %}
   {% for book in books %}
     <div class="container pt-6">
       <div class="card">
@@ -14,9 +15,6 @@
             <div class="content">
               <strong>Published At:</strong> {{book.publish_date.date}}
             </div>
-            <footer class="card-footer">
-              <a href="summary/?id={{book.id}}" class="card-footer-item">View Book</a>
-            </footer>
         </div>
       </div>
     </div>
@@ -28,4 +26,13 @@
       </a>
     </div>
   </div>
+{% else %}
+  <p>
+    You are not logged In! Click
+    <a href="/login">here</a>
+  </p>
+{% endif %}
+<script>
+  document.getElementById('mybooks').remove()
+</script>
 {% endblock %}

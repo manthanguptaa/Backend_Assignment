@@ -5,33 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pratilipi</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
+  <div class="container mt-6">
     <form id="add_book">
       <div class="field">
           <label class="label">Book Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter Book Name" id="book_name">
+            <input class="input" type="text" placeholder="Enter Book Name" id="book_name" required>
           </div>
       </div>
       <div class="field">
           <label class="label">Language</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter language" id="lng">
+            <input class="input" type="text" placeholder="Enter language" id="lng" required>
           </div>
       </div>  
         
         <div class="field">
           <label class="label">Summary</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Enter summary of the book in 200 words" id="smry" maxlength=200></textarea>
+            <textarea class="textarea" placeholder="Enter summary of the book in 200 words" id="smry" maxlength=200 required></textarea>
           </div>
         </div>
 
         <div class="field">
           <label class="label">Content</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Write down your amazing story here in 1000words" id="content" maxlength=1000></textarea>
+            <textarea class="textarea" placeholder="Write down your amazing story here in 1000words" id="content" maxlength=1000 required></textarea>
           </div>
         </div>
         
@@ -41,23 +43,30 @@
           </div>
         </div>
     </form>
+  </div>
 
-      <script>
-        $(document).ready(function () {
-            $('#add_book').on('submit', function (event) {
-                
+      <script type="text/javascript">
+        $(document).on('submit','#add_book', function (event) {
+                event.preventDefault();
+
                 $.ajax({
-                url: 'mybooks/addbook/',
+                url: 'postbook/',
                 type: 'POST',
                 headers: {'X-CSRFToken':'{{csrf_token}}'},
-                data: {'title': $('#book_name').val(), 'lng': $('#lng').val(), 'summary': $('#smry').val(),'content': $('#content').val()},
+                data: {
+                  'title': $('#book_name').val(), 
+                  'lng': $('#lng').val(), 
+                  'summary': $('#smry').val(),
+                  'content': $('#content').val()
+                },
 
                 success : function(json) {
-                    $('#search_input').val(''); // remove the value from the input
-                    console.log(json); // log the returned json to the console
-                    console.log("success"); // another sanity check
-                    //window.location('search/')
-                    location.href = "http://127.0.0.1:8000"
+                    $('#book_name').val(''); 
+                    $('#lng').val('');
+                    $('#smry').val('');
+                    $('#content').val('');
+                    console.log("success");
+                    window.location = '/'
                 },
 
                 error : function(xhr,errmsg,err) {
@@ -65,7 +74,6 @@
                 }
             });
             })
-        })
     </script>
   </body>
 </html>

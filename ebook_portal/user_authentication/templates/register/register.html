@@ -8,11 +8,11 @@
   </head>
   <body>
       {% load crispy_forms_tags %}
-    <form method="POST" class="container form-group">
+    <form method="POST" class="container form-group mt-6">
         <h1 class="title is-1">Register!</h1>
         {% csrf_token %}
         {{form | crispy}}
-        <button type="submit" class="button is-success">Join Us!</button>
+        <button type="submit" class="button is-success mt-6">Join Us!</button>
     </form>
   </body>
 </html>
