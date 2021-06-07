@@ -6,3 +6,5 @@
 2. DB: sqlite3 (inbuilt)
 
 ## DB Schema
+![Untitled (1)](https://user-images.githubusercontent.com/42516515/121040837-daec2980-c7cf-11eb-8e2f-f568f600949c.png)
+

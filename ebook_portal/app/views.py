@@ -1,6 +1,6 @@
 import datetime
 from django.contrib.admin.options import csrf_protect_m
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import book
@@ -79,7 +79,29 @@ def readStoryPage(request):
     book_info = bookInfo(request)
     return render(request, "read_full_story_page.html",{"books":list(book_info)})
 
-
+def helper(dataObjectList):
+    html=""
+    for i in dataObjectList:
+        print(i.publish_date.date())
+        html+= f'''<div class="container">
+                <div class="card mt-6">
+                    <div class="card-content">
+                    <div class="content">
+                        <strong>Book Name:</strong> {i.book_name}
+                    </div>
+                    <div class="content">
+                        <strong>Author:</strong> {i.author.username}
+                    </div>
+                    <div class="content">
+                        <strong>Published At:</strong> {i.publish_date.date().strftime('%B %d, %Y')}
+                    </div>
+                    <footer class="card-footer">
+                        <a href="summary/?id={i.id}" class="card-footer-item">View Book</a>
+                    </footer>
+                    </div>
+                </div>
+            </div>'''   
+    return html
 
 def searchForBook(request):
     """
@@ -92,7 +114,8 @@ def searchForBook(request):
         books_byName = book.objects.filter(book_name__iexact=search_query)
         print(books_byName,books_byAuthor)
         context = {"books": list(books_byAuthor)}
-        return render(request,"search_result_page.html", context)
+        # return render(request,"search_result_page.html", context)
+        return JsonResponse({"data": helper(list(books_byAuthor | books_byName))})
 
 
 
