@@ -1,8 +1,10 @@
 from django.contrib.admin.options import csrf_protect_m
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import book
 from datetime import date
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -13,11 +15,12 @@ def getAllBooks(request):
     """
     if request.method == 'GET':
         books = book.objects.all().order_by("-publish_date")
-        # book_dict = dict(books)
-        # print(book_dict)
-        # TODO paginate the results
+        paginator = Paginator(books,25) # Show 25 contacts per page.
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         print(request.user.id)
-        return render(request, "landing_page.html", {"books":list(books), "user": User, "current_user_id": request.user.id})
+        return render(request, "landing_page.html", {"user": User, "current_user_id": request.user.id, 'page_obj': page_obj})
 
 
 def postBook(request):
@@ -25,16 +28,18 @@ def postBook(request):
         A function to get the user enetered data about the book and create a new row inside DB
     """
     if request.method == 'POST':
-        book_name = request.GET.get('title')
-        language = request.GET.get('lng')
+        book_name = request.POST.get('title')
+        language = request.POST.get('lng')
         published_date = date.today()
-        summary = request.GET.get('summary')
-        content = request.GET.get('content')
+        summary = request.POST.get('summary')
+        content = request.POST.get('content')
         # TODO DJango login required decorator
+        print(book_name, language, published_date, summary, content)
         request.user.book_set.create(book_name=book_name, language=language, published_date=published_date, summary=summary, content=content)
         
 
 def addBookPage(request):
+    postBook(request)
     return render(request, "add_book_page.html")
 
 
@@ -67,9 +72,12 @@ def searchForBook(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query')
         print(search_query)
-        # TODO add for 
         books = book.objects.filter(author__username__icontains=search_query)
-        print(books.query)
+        print(books)
+        helper(request,books)
+
+def helper(request, books):
+    if request.method == 'GET':
         return render(request,"search_result_page.html",{"books": list(books)})
 
 

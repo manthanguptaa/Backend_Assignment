@@ -18,7 +18,7 @@
             </div>
         </div>
     </nav>
-    <form id="search-bar">
+    <form id="search-bar" action="search/">
         <div class="field is-grouped">
             <p class="control is-expanded">
             <input class="input" type="text" placeholder="Find a repository" id="search_input">
@@ -29,7 +29,7 @@
         </div>
     </form>
             </div>
-                {% for book in books %}
+                {% for book in page_obj %}
                     <div class="card">
                         <div class="card-content">
                             <div class="content">
@@ -47,11 +47,28 @@
                     </div>
                 {% endfor %}
             </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
 
     <script>
         $(document).ready(function () {
             $('#search-bar').on('submit', function (event) {
-                event.preventDefault();
+                
                 $.ajax({
                 url: 'search/',
                 type: 'POST',
@@ -62,6 +79,8 @@
                     $('#search_input').val(''); // remove the value from the input
                     console.log(json); // log the returned json to the console
                     console.log("success"); // another sanity check
+                    //window.location('search/')
+                    location.href = "http://127.0.0.1:8000/search"
                 },
 
                 error : function(xhr,errmsg,err) {
