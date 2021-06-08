@@ -1,1 +1,1 @@
-web: sh -c 'cd ./ebook_portal/ && gunicorn ebook_portal.wsgi --log-file -'
+web: sh -c 'cd ./ebook_portal/ && gunicorn ebook_portal.wsgi --bind 0.0.0.0:$PORT'
