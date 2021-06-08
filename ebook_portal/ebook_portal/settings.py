@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-0mkvw^x9+&)!#(8&o=by%0tvfklm@t0&3ukjo_c$!7t_3@dj6r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','https://ebook-manthan.herokuapp.com/']
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = False
