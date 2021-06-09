@@ -1,6 +1,6 @@
 import datetime
 from ebook_portal.settings import DEFAULT_COVER_IMAGE_URL
-from .utils import bookInfo, helper, CustomError, is_image_and_ready
+from .utils import bookInfo, helper, CustomError, is_url_image
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -34,7 +34,7 @@ def postBook(request):
     summary = request.POST.get('summary')
     content = request.POST.get('content')
     cover_image = request.POST.get('cover_image')
-    if not is_image_and_ready(cover_image):
+    if not is_url_image(cover_image):
         cover_image = DEFAULT_COVER_IMAGE_URL
     try:
         request.user.book_set.create(book_name=book_name, language=language, publish_date=publish_date, summary=summary, content=content, cover_book_photo=cover_image)
@@ -76,7 +76,7 @@ def searchForBook(request):
 
     search_query = request.POST.get('search_query')
     books_by_author = book.objects.filter(author__username__icontains=search_query)
-    books_by_name = book.objects.filter(book_name__iexact=search_query)
+    books_by_name = book.objects.filter(book_name__icontains=search_query)
     return JsonResponse({"data": helper(list(books_by_author | books_by_name))})
 
 

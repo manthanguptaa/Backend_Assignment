@@ -12,7 +12,7 @@
         <h1 class="title is-1">Login</h1>
         {% csrf_token %}
         {{form | crispy}}
-        <p class="mt-4">Don't have an account? Create on <a href="/register">here</a></p>
+        <p class="mt-4">Don't have an account? Create on <a href="{% url 'register' %}">here</a></p>
         <button type="submit" class="button is-success mt-4">Login</button>
     </form>
   </body>

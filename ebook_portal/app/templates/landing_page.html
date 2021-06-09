@@ -34,7 +34,7 @@
                     <strong>Published At:</strong> {{book.publish_date.date}}
                 </div>
                 <footer class="card-footer">
-                    <a href="summary/{{book.book_slug}}" class="card-footer-item">View Book</a>
+                    <a href="{% url 'summary_page' slug=book.book_slug %}" class="card-footer-item">View Book</a>
                 </footer>
             </div>
         </div>

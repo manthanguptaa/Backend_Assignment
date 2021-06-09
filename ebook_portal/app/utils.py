@@ -20,26 +20,26 @@ def helper(dataObjectList):
         A function to process the data and returning html to display cards
     """
     html='<div class="columns is-multiline">'
-    for i in dataObjectList:
+    for book in dataObjectList:
         html+= f'''<div class="column is-one-quarter">
         <div class="card mt-6">
             <div class="card-image">
                 <figure class="image is-4by3">
-                  <img src="{i.cover_book_photo}" alt="Placeholder image">
+                  <img src="{book.cover_book_photo}" alt="Placeholder image">
                 </figure>
               </div>
             <div class="card-content">
                 <div class="content">
-                    <strong>Book Name:</strong> {i.book_name}
+                    <strong>Book Name:</strong> {book.book_name}
                 </div>
                 <div class="content">
-                    <strong>Author:</strong> {i.author.username}
+                    <strong>Author:</strong> {book.author.username}
                 </div>
                 <div class="content">
-                    <strong>Published At:</strong> {i.publish_date.date().strftime('%B %d, %Y')}
+                    <strong>Published At:</strong> {book.publish_date.date().strftime('%B %d, %Y')}
                 </div>
                 <footer class="card-footer">
-                    <a href="summary/{i.book_slug}" class="card-footer-item">View Book</a>
+                    <a href="summary/{book.book_slug}" class="card-footer-item">View Book</a>
                 </footer>
             </div>
         </div>
@@ -48,26 +48,9 @@ def helper(dataObjectList):
     return html
 
 
-def is_url_image(url):    
+def is_url_image(url): 
+    """
+        Function to check if the url entered is of an image
+    """   
     mimetype,encoding = mimetypes.guess_type(url)
     return (mimetype and mimetype.startswith('image'))
-
-def check_url(url):
-    """Returns True if the url returns a response code between 200-300,
-       otherwise return False.
-    """
-    try:
-        headers = {
-            "Range": "bytes=0-10",
-            "User-Agent": "MyTestAgent",
-            "Accept": "*/*"
-        }
-
-        req = urllib3.Request(url, headers=headers)
-        response = urllib3.urlopen(req)
-        return response.code in range(200, 209)
-    except Exception:
-        return False
-
-def is_image_and_ready(url):
-    return is_url_image(url) and check_url(url)

@@ -11,12 +11,12 @@
                 <p class="subtitle">
                   {{books.author.username}}
                 </p>
-                <p>
+                <p text-align="justify">
                   {{books.summary}}
                 </p>
               </div>
           </div class="mx-6">
-            <a class="button is-danger" href="content/{{books.book_slug}}">View the whole story</a>
+            <a class="button is-danger" href="{% url 'full_content_page' slug=books.book_slug %}">View the whole story</a>
             </div>
             </div>
       </div>

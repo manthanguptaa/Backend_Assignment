@@ -30,7 +30,6 @@ urlpatterns = [
     path("", l.getAllBooks, name="home"),
     path("summary/<str:slug>",l.summaryPage, name="summary_page"),
     path("summary/content/<str:slug>", l.readStoryPage, name="full_content_page"),
-    path("search/", l.searchForBook, name="search_result"),
     path("mybooks/", l.myBooks, name = "my_books"),
     path("mybooks/addbook/", l.addBookPage, name="add_book"),
     path("mybooks/addbook/postbook/", l.postBook),

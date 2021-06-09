@@ -15,8 +15,8 @@ class book(models.Model):
     book_name = models.CharField(max_length=50)
     language = models.CharField(max_length=20)
     publish_date = models.DateTimeField()
-    summary = models.CharField(max_length=200)
-    content = models.CharField(max_length=1000)
+    summary = models.CharField(max_length=500)
+    content = models.CharField(max_length=3000)
     cover_book_photo = models.CharField(max_length=250, blank=True, null=True)
     slug = models.SlugField(unique=True, max_length=50)
     
