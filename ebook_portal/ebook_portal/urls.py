@@ -22,13 +22,14 @@ from django.views.static import serve
 from user_authentication import views as v
 from app import views as l
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("register/", v.register, name="register"),
     path("", include("django.contrib.auth.urls")),
     path("", l.getAllBooks, name="home"),
-    path("summary/",l.summaryPage, name="summary_page"),
-    path("summary/content/", l.readStoryPage, name="full_content_page"),
+    path("summary/<str:slug>",l.summaryPage, name="summary_page"),
+    path("summary/content/<str:slug>", l.readStoryPage, name="full_content_page"),
     path("search/", l.searchForBook, name="search_result"),
     path("mybooks/", l.myBooks, name = "my_books"),
     path("mybooks/addbook/", l.addBookPage, name="add_book"),

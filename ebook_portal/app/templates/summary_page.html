@@ -1,36 +1,24 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pratilipi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
-  </head>
+{% extends 'base.html' %}
+{% block content %}
   <body>
-    {% for book in books %}
-    <section class="hero is-primary">
-      <div class="hero-body">
-        <p class="title">
-          {{book.book_name}}
-        </p>
-        <p class="subtitle">
-          Author: {{book.author.username}}
-        </p>
-      </div>
-    </section>
-    {% endfor %}
-    {% for book in books %}
-      <section class="section is-medium">
-        <div class="container">
+    <div class="container">
+          <div class="columns is-centered mt-6">
+            <img src="{{books.cover_book_photo}}" height="256" width="256">
+          <div class="column">
+                <p class="title">
+                    {{books.book_name}}
+                </p>
                 <p class="subtitle">
-                    {{book.summary}}
+                  {{books.author.username}}
                 </p>
                 <p>
-                    View the whole story
-                    <a href="content/?id={{book.id}}">here</a>
+                  {{books.summary}}
                 </p>
-        </div>
-      </section>
-    {% endfor %}
+              </div>
+          </div class="mx-6">
+            <a class="button is-danger" href="content/{{books.book_slug}}">View the whole story</a>
+            </div>
+            </div>
+      </div>
   </body>
-</html>
+{% endblock %}

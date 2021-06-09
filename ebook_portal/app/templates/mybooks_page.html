@@ -1,24 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if user.is_authenticated %}
+<div class="container">
+<div class="columns is-multiline">
   {% for book in books %}
-    <div class="container pt-6">
-      <div class="card">
+  <div class="column is-one-quarter">
+    <div class="card mt-6">
+        <div class="card-image">
+            <figure class="image is-4by3">
+              <img src="{{book.cover_book_photo}}" alt="Placeholder image">
+            </figure>
+          </div>
         <div class="card-content">
             <div class="content">
-              <strong>Book Name:</strong> {{book.book_name}}
+                <strong>Book Name:</strong> {{book.book_name}}
             </div>
             <div class="content">
-              <strong>Author:</strong> {{book.author.username}}
+                <strong>Author:</strong> {{book.author.username}}
             </div>
             <div class="content">
-              <strong>Published At:</strong> {{book.publish_date.date}}
+                <strong>Published At:</strong> {{book.publish_date.date}}
             </div>
         </div>
-      </div>
     </div>
+</div>
   {% endfor %}
+</div>
   <div class="container">
     <div class="control pt-6">
       <a class="button is-danger" href="addbook/">
@@ -26,12 +33,7 @@
       </a>
     </div>
   </div>
-{% else %}
-  <p>
-    You are not logged In! Click
-    <a href="/login">here</a>
-  </p>
-{% endif %}
+</div>
 <script>
   document.getElementById('mybooks').remove()
 </script>

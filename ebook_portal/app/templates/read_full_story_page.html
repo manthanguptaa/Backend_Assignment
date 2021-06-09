@@ -3,22 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% for book in books %}
             <title>
-                {{book.book_name}}
+                {{books.book_name}}
             </title>
-    {% endfor %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
   </head>
   <body>
+    <div class="container">
   <section class="section is-medium">
-    <div class="container subtitle">
-        {% for book in books %}
-            <p class="subtitle">
-                {{book.content}}
+    <p class="title level-item has-text-centered mb-6">{{books.book_name}}</p>
+    <p class="subtitle">- {{books.author.username}}</p>
+            <p>
+                {{books.content}}
             </p>
-        {% endfor %}
-    </div>
   </section>
+</div>
   </body>
 </html>

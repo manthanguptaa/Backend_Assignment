@@ -1,135 +1,90 @@
 import datetime
-from django.contrib.admin.options import csrf_protect_m
+from ebook_portal.settings import DEFAULT_COVER_IMAGE_URL
+from .utils import bookInfo, helper, CustomError, is_image_and_ready
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import book
 from datetime import date, tzinfo
 from django.core.paginator import Paginator
-
-# Create your views here.
+from django.contrib.auth.decorators import login_required
 
 
 def getAllBooks(request):
     """
         A function to get all the books from DB and display it on the landing page as a catalogue
     """
-    if request.method == 'GET':
-        books_result = book.objects.all().order_by("-publish_date")
-        # Paginate the results into batches of 10
-        paginator = Paginator(books_result,10)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+    books_result = book.objects.all().order_by("-publish_date")
+    # Paginated the results into batches of 10
+    paginator = Paginator(books_result,12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
         
-        return render(request, "landing_page.html", {"user": User, "current_user_id": request.user.id, 'page_obj': page_obj})
+    return render(request, "landing_page.html", {"current_user_id": request.user.id, 'page_obj': page_obj})
 
 
+@login_required(login_url='/login')
 def postBook(request):
     """
         A function to get the user enetered data about the book and create a new row inside DB
     """
-    print(request.body)
-    if request.method == 'POST':
-        if request.user.id:
-            book_name = request.POST.get('title')
-            language = request.POST.get('lng')
-            publish_date = datetime.datetime.now()
-            summary = request.POST.get('summary')
-            content = request.POST.get('content')
-            request.user.book_set.create(book_name=book_name, language=language, publish_date=publish_date, summary=summary, content=content)
-            return HttpResponseRedirect("/")
-        else:
-            return HttpResponseRedirect("/login")
+    book_name = request.POST.get('title')
+    language = request.POST.get('lng')
+    publish_date = datetime.datetime.now()
+    summary = request.POST.get('summary')
+    content = request.POST.get('content')
+    cover_image = request.POST.get('cover_image')
+    if not is_image_and_ready(cover_image):
+        cover_image = DEFAULT_COVER_IMAGE_URL
+    try:
+        request.user.book_set.create(book_name=book_name, language=language, publish_date=publish_date, summary=summary, content=content, cover_book_photo=cover_image)
+    except Exception as e:
+        raise CustomError("Something is wrong!")
+    return HttpResponseRedirect("/")
 
-        
-
+ 
+@login_required(login_url="/login")
 def addBookPage(request):
     """
         Function to render add_book_page.html file
     """
-    if request.user.id:
-        return render(request, "add_book_page.html")
-    else:
-        return HttpResponseRedirect("/login")
+    return render(request, "add_book_page.html")
 
 
-def bookInfo(request):
-    """
-        A function to get all the info related to a book by it's book_id
-    """
-    if request.method == 'GET':
-        book_id = request.GET.get('id')
-        book_info = book.objects.filter(id__exact=book_id)
-        
-        return book_info
-
-
-def summaryPage(request):
+def summaryPage(request, slug):
     """
         Function for rendering summary page
     """
-    book_info = bookInfo(request)
-    return render(request, "summary_page.html", {"books":list(book_info)})
+    slug = slug.split('-')[-1]
+    book_info = bookInfo(slug)
+    return render(request, "summary_page.html", {"books":book_info})
 
 
-def readStoryPage(request):
+def readStoryPage(request, slug):
     """
         Function for rendering the read full story page
     """
-    book_info = bookInfo(request)
-    return render(request, "read_full_story_page.html",{"books":list(book_info)})
+    slug = slug.split('-')[-1]
+    book_info = bookInfo(slug)
+    return render(request, "read_full_story_page.html",{"books":book_info})
 
-def helper(dataObjectList):
-    html=""
-    for i in dataObjectList:
-        print(i.publish_date.date())
-        html+= f'''<div class="container">
-                <div class="card mt-6">
-                    <div class="card-content">
-                    <div class="content">
-                        <strong>Book Name:</strong> {i.book_name}
-                    </div>
-                    <div class="content">
-                        <strong>Author:</strong> {i.author.username}
-                    </div>
-                    <div class="content">
-                        <strong>Published At:</strong> {i.publish_date.date().strftime('%B %d, %Y')}
-                    </div>
-                    <footer class="card-footer">
-                        <a href="summary/?id={i.id}" class="card-footer-item">View Book</a>
-                    </footer>
-                    </div>
-                </div>
-            </div>'''   
-    return html
 
 def searchForBook(request):
     """
         A function to get all the books that match the search query
     """
-    if request.method == 'POST':
-        search_query = request.POST.get('search_query')
-        print(search_query)
-        books_byAuthor = book.objects.filter(author__username__icontains=search_query)
-        books_byName = book.objects.filter(book_name__iexact=search_query)
-        print(books_byName,books_byAuthor)
-        context = {"books": list(books_byAuthor)}
-        # return render(request,"search_result_page.html", context)
-        return JsonResponse({"data": helper(list(books_byAuthor | books_byName))})
+
+    search_query = request.POST.get('search_query')
+    books_by_author = book.objects.filter(author__username__icontains=search_query)
+    books_by_name = book.objects.filter(book_name__iexact=search_query)
+    return JsonResponse({"data": helper(list(books_by_author | books_by_name))})
 
 
-
+@login_required(login_url="/login")
 def myBooks(request):
     """
         A function to get all the books by the current user and display it
     """
-    if request.method == 'GET':
-        if(request.user.id):
-            user_id = request.GET.get('id')
-            if user_id:
-                book_info = book.objects.filter(author__id__iexact = user_id)
-                return render(request, "mybooks_page.html", {"books": list(book_info), "user": User})
-            else:
-                return HttpResponseRedirect("/")
-        else:
-            return HttpResponseRedirect("/login")
+    user_id = request.user.id
+    book_info = book.objects.filter(author__id__iexact = user_id)
+    return render(request, "mybooks_page.html", {"books": list(book_info)})
